@@ -32,7 +32,7 @@ with open("Input/config.yaml", 'r') as stream:
     try:
 
         content = yaml.load(stream)
-        print(content)
+        #print(content)
         urlList = content['gitUrl']
         url = urlList[0]
         #print(url)
