@@ -220,7 +220,7 @@ import java.util.List;&#xd;
 import org.openqa.selenium.support.ui.WebDriverWait;&#xd;
 import org.openqa.selenium.support.ui.ExpectedConditions;&#xd;
 &#xd;
-WebDriverWait wait= new WebDriverWait(WDS.browser,60);&#xd;
+WebDriverWait wait= new WebDriverWait(WDS.browser,200);&#xd;
 WDS.sampleResult.sampleStart();&#xd;
 try{&#xd;
 try{&#xd;
