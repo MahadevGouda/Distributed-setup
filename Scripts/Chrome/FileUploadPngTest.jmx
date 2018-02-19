@@ -15,9 +15,9 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__P(count,2)}</stringProp>
+          <stringProp name="LoopController.loops">${__P(count,1)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__P(users,3)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(users,1)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(rampup,0)}</stringProp>
         <longProp name="ThreadGroup.start_time">1514449702000</longProp>
         <longProp name="ThreadGroup.end_time">1514449702000</longProp>
@@ -26,18 +26,6 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
-          <stringProp name="delimiter">,</stringProp>
-          <stringProp name="fileEncoding"></stringProp>
-          <stringProp name="filename">Inputdatas.csv</stringProp>
-          <boolProp name="ignoreFirstLine">false</boolProp>
-          <boolProp name="quotedData">true</boolProp>
-          <boolProp name="recycle">true</boolProp>
-          <stringProp name="shareMode">shareMode.all</stringProp>
-          <boolProp name="stopThread">false</boolProp>
-          <stringProp name="variableNames">MainUrl,username,password</stringProp>
-        </CSVDataSet>
-        <hashTree/>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Transaction Controller" enabled="true">
           <boolProp name="TransactionController.includeTimers">false</boolProp>
           <boolProp name="TransactionController.parent">false</boolProp>
@@ -71,8 +59,8 @@ import java.time.temporal.ChronoUnit;&#xd;
 import java.time.format.DateTimeFormatter;  &#xd;
 import java.time.LocalDateTime;   &#xd;
 import org.openqa.selenium.WebElement;&#xd;
+import org.openqa.selenium.Dimension;&#xd;
 import org.openqa.selenium.By;&#xd;
-import org.openqa.selenium.Dimension;
 import java.io.IOException;&#xd;
 import org.apache.commons.io.FileUtils;&#xd;
 import org.openqa.selenium.OutputType;&#xd;
@@ -85,7 +73,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;&#xd;
 import org.openqa.selenium.support.ui.ExpectedConditions;&#xd;
 &#xd;
 var vars = org.apache.jmeter.threads.JMeterContextService.getContext().getVariables();&#xd;
-WebDriverWait wait= new WebDriverWait(WDS.browser,120);&#xd;
+WebDriverWait wait= new WebDriverWait(WDS.browser,300);&#xd;
 vars.put(&quot;Itr&quot;,String.valueOf(&quot;${__BeanShell(vars.getIteration(),)}&quot;));&#xd;
 vars.put(&quot;usr&quot;,String.valueOf(&quot;${__threadNum}&quot;));&#xd;
 vars.put(&quot;overlay&quot;,&quot;0&quot;);&#xd;
@@ -97,16 +85,16 @@ WDS.sampleResult.sampleStart();&#xd;
 //Script Starts from here&#xd;
 vars.put(&quot;StartTime&quot;,String.valueOf(LocalDateTime.now()));&#xd;
 &#xd;
-d = new Dimension(1750, 1000);
-WDS.browser.manage().window().setSize(d);
+d = new Dimension(1750, 1000);&#xd;
+WDS.browser.manage().window().setSize(d);&#xd;
 //Launcing application&#xd;
-WDS.browser.get(&quot;${MainUrl}&quot;);&#xd;
+WDS.browser.get(&quot;${__P(Url,http://app.mammoth.io)}&quot;);&#xd;
 &#xd;
 //application login process&#xd;
 try{&#xd;
-wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(&quot;userEmail&quot;))).sendKeys(new String[] {&quot;${username}&quot;});&#xd;
-wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(&quot;userPwd&quot;))).sendKeys(new String[] {&quot;${password}&quot;});&#xd;
-login=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(&quot;//button[@class=&apos;btn btn-mammoth&apos;]&quot;)));&#xd;
+wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(&quot;${__P(uid)}&quot;))).sendKeys(new String[] {&quot;${__P(username)}&quot;});&#xd;
+wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(&quot;${__P(passid)}&quot;))).sendKeys(new String[] {&quot;${__P(password)}&quot;});&#xd;
+login=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(&quot;${__P(signbuttonid)}&quot;)));&#xd;
 startlogin=LocalDateTime.now();&#xd;
 login.click();&#xd;
 &#xd;
@@ -142,8 +130,6 @@ try{&#xd;
             	vars.put(&quot;overlay&quot;,String.valueOf(minutesBetween));&#xd;
             	Long minutesBetween=ChronoUnit.MILLIS.between(startlogin,end);&#xd;
             	vars.put(&quot;login&quot;,String.valueOf(minutesBetween));&#xd;
-            WDS.log.info(vars.get(&quot;overlay&quot;));&#xd;
-        	WDS.log.info(vars.get(&quot;login&quot;));&#xd;
         //Overlay is not present on screen but test should mark as fail,as it required browser refresh to work.&#xd;
                             }&#xd;
                    }&#xd;
@@ -155,8 +141,6 @@ try{&#xd;
 	vars.put(&quot;overlay&quot;,String.valueOf(minutesBetween));&#xd;
 	Long minutesBetween=ChronoUnit.MILLIS.between(startlogin,end);&#xd;
 	vars.put(&quot;login&quot;,String.valueOf(minutesBetween));&#xd;
-	WDS.log.info(vars.get(&quot;overlay&quot;));&#xd;
-    WDS.log.info(vars.get(&quot;login&quot;));&#xd;
 }&#xd;
 catch(Exception e){&#xd;
     //There is no overlay found&#xd;
@@ -166,14 +150,9 @@ catch(Exception e){&#xd;
 	vars.put(&quot;overlay&quot;,String.valueOf(minutesBetween));&#xd;
 	Long minutesBetween=ChronoUnit.MILLIS.between(startlogin,end);&#xd;
 	vars.put(&quot;login&quot;,String.valueOf(minutesBetween));&#xd;
-    WDS.log.info(vars.get(&quot;overlay&quot;));&#xd;
-    WDS.log.info(vars.get(&quot;login&quot;));&#xd;
 	break outerloop;&#xd;
 	}&#xd;
 finally{&#xd;
-    WDS.log.info(&quot;test&quot;+vars.get(&quot;overlay&quot;));&#xd;
-    WDS.log.info(&quot;test&quot;+vars.get(&quot;login&quot;));&#xd;
-&#xd;
 WDS.sampleResult.sampleEnd();&#xd;
 }&#xd;
 &#xd;
@@ -227,7 +206,7 @@ import org.testng.asserts.SoftAssert;&#xd;
 import java.util.List;&#xd;
 import org.openqa.selenium.support.ui.WebDriverWait;&#xd;
 import org.openqa.selenium.support.ui.ExpectedConditions;&#xd;
-WebDriverWait wait= new WebDriverWait(WDS.browser,120);&#xd;
+WebDriverWait wait= new WebDriverWait(WDS.browser,200);&#xd;
 WDS.sampleResult.sampleStart();&#xd;
 try{&#xd;
 try{&#xd;
@@ -236,13 +215,12 @@ wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(&quot;//div[
 }catch(Exception e){&#xd;
     //If There is no data in the application uploading a new file.&#xd;
 if(WDS.browser.findElement(By.xpath(&quot;//div[@class=&apos;no-data&apos;]&quot;)).isDisplayed()){&#xd;
-wait.until(ExpectedConditions.elementToBeClickable(By.xpath(&quot;//ul[@class=&apos;menu-main&apos;]/child::li&quot;))).click();&#xd;
+wait.until(ExpectedConditions.elementToBeClickable(By.xpath(&quot;${__P(addNewButtonId)}&quot;))).click();&#xd;
 start=LocalDateTime.now();&#xd;
 Thread.sleep(5000);&#xd;
-file1= WDS.browser.findElement(By.xpath(&quot;//input[contains(@class,&apos;fileSelectHiddenInput&apos;)]&quot;));&#xd;
+file1= WDS.browser.findElement(By.xpath(&quot;${__P(fileUploadButtonId)}&quot;));&#xd;
 &#xd;
 WDS.browser.executeScript(&quot;document.querySelector(&apos;.fileSelectHiddenInput&apos;).setAttribute(&apos;style&apos;,display=&apos;block&apos;,&apos;opacity:1; width:10px; height:10px; z-index:100&apos;)&quot;,new Object[] {&quot;&quot;});&#xd;
-//filelocation=&quot;C:/Users/Deepak/Desktop/MamothPerformanceTest/scale_up_tests-master/test_suites/Test Files/CSVoffice_main.csv&quot;;&#xd;
 filelocation=java.lang.System.getProperty(&quot;user.dir&quot;) + &quot;/&quot; + &quot;Testfiles/CSVoffice_main.csv&quot;;&#xd;
 WDS.log.info(filelocation);&#xd;
 file1.sendKeys(new String[] {filelocation});&#xd;
@@ -286,18 +264,18 @@ import java.nio.file.Path;&#xd;
 import java.nio.file.Paths;&#xd;
 import org.openqa.selenium.support.ui.WebDriverWait;&#xd;
 import org.openqa.selenium.support.ui.ExpectedConditions;&#xd;
-WebDriverWait wait= new WebDriverWait(WDS.browser,120);&#xd;
+WebDriverWait wait= new WebDriverWait(WDS.browser,300);&#xd;
 WDS.sampleResult.sampleStart();&#xd;
 var vars = org.apache.jmeter.threads.JMeterContextService.getContext().getVariables();&#xd;
 &#xd;
 try{&#xd;
     //uploading a .csv file to application here after clicking upload button&#xd;
-    wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(&quot;//ul[@class=&apos;menu-main&apos;]/child::li&quot;))).click();&#xd;
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(&quot;${__P(addNewButtonId)}&quot;))).click();&#xd;
     start=LocalDateTime.now();&#xd;
     String currDir  = System.getProperty(&quot;user.dir&quot;);&#xd;
     File file =new File(currDir);&#xd;
     Thread.sleep(5000);&#xd;
-    file1= WDS.browser.findElement(By.xpath(&quot;//input[contains(@class,&apos;fileSelectHiddenInput&apos;)]&quot;));&#xd;
+    file1= WDS.browser.findElement(By.xpath(&quot;${__P(fileUploadButtonId)}&quot;));&#xd;
     &#xd;
     WDS.browser.executeScript(&quot;document.querySelector(&apos;.fileSelectHiddenInput&apos;).setAttribute(&apos;style&apos;,display=&apos;block&apos;,&apos;opacity:1; width:10px; height:10px; z-index:100&apos;)&quot;,new Object[] {&quot;&quot;});&#xd;
     //filelocation=&quot;C:/Users/Deepak/Desktop/MamothPerformanceTest/scale_up_tests-master/test_suites/Test Files/CSVoffice_main.csv&quot;;&#xd;
@@ -311,7 +289,7 @@ try{&#xd;
     oldTimeForProgress=LocalDateTime.now();&#xd;
     try{&#xd;
     //checking for upload error message&#xd;
-    wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(&quot;//div[contains(@class,&apos;ui-notification&apos;)]//div[contains(@class,&apos;message&apos;)]&quot;))).isDisplayed();	&#xd;
+    wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(&quot;${__P(deleteMsgOnTop)}&quot;))).isDisplayed();	&#xd;
     WDS.log.info(&quot;--------------------png file format not supported--------------------&quot;);&#xd;
     end=LocalDateTime.now();&#xd;
     	Long minutesBetween=ChronoUnit.MILLIS.between(start,end);&#xd;
@@ -367,8 +345,6 @@ try{&#xd;
     logout=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(&quot;//a[@class=&apos;logout&apos;]&quot;)));&#xd;
     start=LocalDateTime.now();&#xd;
     logout.click();&#xd;
-    url=WDS.browser.getCurrentUrl();&#xd;
-   // wait.until(ExpectedConditions.UrlToBe(&quot;${MainUrl}&quot;));&#xd;
     wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(&quot;//div/figure[@class=&apos;logo-mammoth text-hide&apos;]&quot;)));&#xd;
     end=LocalDateTime.now();&#xd;
     Long minutesBetween=ChronoUnit.MILLIS.between(start,end);&#xd;
@@ -434,6 +410,10 @@ p.close();&#xd;
           </com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler>
           <hashTree/>
         </hashTree>
+        <com.tag.jmeter.ext.config.PropertyReader guiclass="TestBeanGUI" testclass="com.tag.jmeter.ext.config.PropertyReader" testname="Property File Reader" enabled="true">
+          <stringProp name="propFilePath">/home/ubuntu/apache-jmeter-3.3/bin/Inputdatas.properties</stringProp>
+        </com.tag.jmeter.ext.config.PropertyReader>
+        <hashTree/>
       </hashTree>
     </hashTree>
     <WorkBench guiclass="WorkBenchGui" testclass="WorkBench" testname="WorkBench" enabled="true">
