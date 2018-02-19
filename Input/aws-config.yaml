@@ -1,0 +1,13 @@
+ami:
+    #Image details and region
+  - image-id: ami-e793a782
+  - security-group: STest-1
+  - instance-type: t2.micro
+  - region: us-east-2
+
+instance:
+    #Number of Systems/Instances on which the execution should take place
+  - 17
+
+operatingsystem:
+  - ubuntu
