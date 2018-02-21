@@ -4,6 +4,7 @@
 scripts:
     #Name of the JMX files which needs to be executed
   - SanityLogin.jmx
+  - Sanity_Fileupload.jmx
 
 url:
     #URL of the Application under test
@@ -14,26 +15,18 @@ browsers:
   - chrome
 
 cache:
-  - false
-
-instance:
-    #Number of Systems/Instances on which the execution should take place
-  - 5
+  - true
 
 execution:
     #Default value is 1 1 1 respectively
   - concurrency: 1
   - ramp-up: 0
-  - iteration: 2
+  - iteration: 1
 
 
 time-out:
     #Maximum Duration of the jmeter test execution in minutes after which the execution terminates
-  - 5m
+  - 20m
 
-ami:
-    #Image details and region
-  - image-id: ami-6d0b3e08
-  - security-group-id: sg-0c59ab67
-
-
+log:
+  - DEBUG
