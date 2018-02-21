@@ -95,7 +95,7 @@ with open("Input/Input.yaml", 'r') as stream:
         if 'instance' in content:
             instancevar = content['instance']
             instanceNo = instancevar[0]
-            read_n_write_ip()
+        read_n_write_ip()
 
 
         if 'execution' in content:
