@@ -29,4 +29,4 @@ time-out:
   - 20m
 
 log:
-  - DEBUG
+  - INFO
