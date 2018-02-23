@@ -34,7 +34,7 @@ with open("Input/config.yaml", 'r') as stream:
         content = yaml.load(stream)
         #print(content)
         urlList = content['gitUrl']
-        url = urlList[0]
+        giturl = urlList[0]
         #print(url)
         osname = platform.system()
         #print(osname)
@@ -120,6 +120,7 @@ with open("Input/Input.yaml", 'r') as stream:
                         rampup = int(rampup)
 
             #print(concurrency,iteration,rampup)
+            
 
 
         if "time-out" in content:
