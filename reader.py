@@ -121,7 +121,10 @@ with open("Input/Input.yaml", 'r') as stream:
 
             #print(concurrency,iteration,rampup)
             
-
+        if "url" in content:
+             url = content['url'][0]
+             print(url)
+            
 
         if "time-out" in content:
             timeout = content['time-out'][0]
